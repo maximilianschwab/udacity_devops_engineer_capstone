@@ -1,0 +1,8 @@
+
+app/.coverage
+
+app/__pycache__/
+
+app/htmlcov/
+
+app/tests/__pycache__/
