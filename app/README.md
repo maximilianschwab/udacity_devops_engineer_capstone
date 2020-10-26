@@ -20,3 +20,7 @@ The result is provided in the following form:
 * Execute `make install`
 * Execute `python app.py`
 * Execute `./sum_up_example.sh` to get a prediction result
+
+## Execute test
+* To run the tests execute `make test`
+* You find the code coverage in the htmlcov directory
