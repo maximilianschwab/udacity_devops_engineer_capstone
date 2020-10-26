@@ -24,3 +24,8 @@ The result is provided in the following form:
 ## Execute test
 * To run the tests execute `make test`
 * You find the code coverage in the htmlcov directory
+
+## Buld and run docker image
+* First of all install docker
+* Use `./run_docker.sh` to build and run the docker image
+* To upload the previous built image to docker hub use `./upload_docker.sh`
