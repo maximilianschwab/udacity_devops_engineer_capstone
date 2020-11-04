@@ -1,0 +1,212 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Public subnets for VPC'
+
+Parameters:
+
+  ProjectName:
+    Description: ProjectName name (Set in parameters.json)
+    Type: String
+
+  VpcBlock:
+    Type: String
+    Default: 10.0.0.0/16
+    Description: The CIDR range for the VPC. This should be a valid private (RFC 1918) CIDR range.
+
+  Subnet1Block:
+    Type: String
+    Default: 10.0.1.0/24
+    Description: CidrBlock for subnet 1 within the VPC
+
+  Subnet2Block:
+    Type: String
+    Default: 10.0.2.0/24
+    Description: CidrBlock for subnet 2 within the VPC
+
+  Subnet3Block:
+    Type: String
+    Default: 10.0.3.0/24
+    Description: CidrBlock for subnet 3 within the VPC (only used if the region has more than 2 AZs)
+
+Conditions:
+  Has2Azs:
+    Fn::Or:
+      - Fn::Equals:
+        - {Ref: 'AWS::Region'}
+        - ap-south-1
+      - Fn::Equals:
+        - {Ref: 'AWS::Region'}
+        - ap-northeast-2
+      - Fn::Equals:
+        - {Ref: 'AWS::Region'}
+        - ca-central-1
+      - Fn::Equals:
+        - {Ref: 'AWS::Region'}
+        - cn-north-1
+      - Fn::Equals:
+        - {Ref: 'AWS::Region'}
+        - sa-east-1
+      - Fn::Equals:
+        - {Ref: 'AWS::Region'}
+        - us-west-1
+
+  HasMoreThan2Azs:
+    Fn::Not:
+      - Condition: Has2Azs
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock:  !Ref VpcBlock
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+      - Key: Name
+        Value: !Sub '${ProjectName}-VPC'
+
+  InternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+
+  VPCGatewayAttachment:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: Public Subnets
+      - Key: Network
+        Value: Public
+
+  Route:
+    DependsOn: VPCGatewayAttachment
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  Subnet1:
+    Type: AWS::EC2::Subnet
+    Metadata:
+      Comment: Subnet 1
+    Properties:
+      MapPublicIpOnLaunch: true
+      AvailabilityZone:
+        Fn::Select:
+        - '0'
+        - Fn::GetAZs:
+            Ref: AWS::Region
+      CidrBlock:
+        Ref: Subnet1Block
+      VpcId:
+        Ref: VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${ProjectName}-Subnet1"
+      - Key: kubernetes.io/role/elb
+        Value: 1
+
+  Subnet2:
+    Type: AWS::EC2::Subnet
+    Metadata:
+      Comment: Subnet 2
+    Properties:
+      MapPublicIpOnLaunch: true
+      AvailabilityZone:
+        Fn::Select:
+        - '1'
+        - Fn::GetAZs:
+            Ref: AWS::Region
+      CidrBlock:
+        Ref: Subnet2Block
+      VpcId:
+        Ref: VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${ProjectName}-Subnet2"
+      - Key: kubernetes.io/role/elb
+        Value: 1
+
+  Subnet3:
+    Condition: HasMoreThan2Azs
+    Type: AWS::EC2::Subnet
+    Metadata:
+      Comment: Subnet 3
+    Properties:
+      MapPublicIpOnLaunch: true
+      AvailabilityZone:
+        Fn::Select:
+        - '2'
+        - Fn::GetAZs:
+            Ref: AWS::Region
+      CidrBlock:
+        Ref: Subnet3Block
+      VpcId:
+        Ref: VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${ProjectName}-Subnet3"
+      - Key: kubernetes.io/role/elb
+        Value: 1
+
+  Subnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet1
+      RouteTableId: !Ref RouteTable
+
+  Subnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet2
+      RouteTableId: !Ref RouteTable
+
+  Subnet3RouteTableAssociation:
+    Condition: HasMoreThan2Azs
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet3
+      RouteTableId: !Ref RouteTable
+
+  
+Outputs:
+
+  SubnetIds:
+    Description: All subnets in the VPC
+    Value:
+      Fn::If:
+      - HasMoreThan2Azs
+      - !Join [ ",", [ !Ref Subnet1, !Ref Subnet2, !Ref Subnet3 ] ]
+      - !Join [ ",", [ !Ref Subnet1, !Ref Subnet2 ] ]
+    Export:
+      Name: !Sub "${ProjectName}-Subnets"
+
+  SubnetID1:
+    Description: Subnet-1 ID
+    Value: !Ref Subnet1
+    Export:
+      Name: !Sub "${ProjectName}-Subnet1"
+
+  SubnetID2:
+    Description: Subnet-2 ID
+    Value: !Ref Subnet2
+    Export:
+      Name: !Sub "${ProjectName}-Subnet2"
+
+  SubnetID3:
+    Description: Subnet-3 ID
+    Value: !Ref Subnet3
+    Export:
+      Name: !Sub "${ProjectName}-Subnet3"
+  
+  VPCID:
+    Description: VPC ID
+    Value: !Ref VPC
+    Export:
+      Name: !Sub "${ProjectName}-VPC"
