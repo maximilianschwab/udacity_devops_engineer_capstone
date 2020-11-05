@@ -1,3 +1,5 @@
+def image
+
 pipeline {
     agent any
 
@@ -18,6 +20,14 @@ pipeline {
                                 fi
                             '''
                     }
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    image = docker.build("maximilianschwab/devops_capstone", "-f app/Dockerfile application")
                 }
             }
         }
