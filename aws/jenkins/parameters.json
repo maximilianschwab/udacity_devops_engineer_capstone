@@ -2,5 +2,9 @@
     {
       "ParameterKey": "ProjectName",
       "ParameterValue": "capstone-project"
+    },
+    {
+      "ParameterKey": "WhiteListIP",
+      "ParameterValue": "93.201.17.59/32"
     }
   ]
