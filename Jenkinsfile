@@ -87,7 +87,7 @@ pipeline {
             steps {
                 dir('kubernetes') {
                     withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
-                            sh "kubectl set image deployments/devops-capstone devops-capstone=maximilianschwab/devops_capstone:${BUILD_NUMBER}"
+                            sh 'kubectl set image deployments/devops-capstone devops-capstone=maximilianschwab/devops_capstone:${BUILD_NUMBER} --kubeconfig=/home/ubuntu/.kube/config'
                         }
                     }
             }
@@ -95,6 +95,3 @@ pipeline {
 
     }
 }
-
-aws_access_key_id = AKIAYMWPM4K3L6ZCD6F6
-aws_secret_access_key = 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
