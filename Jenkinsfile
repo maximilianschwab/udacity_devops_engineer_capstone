@@ -43,5 +43,15 @@ pipeline {
             }
         }
 
+        stage('Apply deployment') {
+            steps {
+                dir('kubernetes') {
+                    withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
+                            sh 'kubectl apply -f deployment.yaml'
+                        }
+                    }
+            }
+        }
+
     }
 }
