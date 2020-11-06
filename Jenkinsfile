@@ -83,6 +83,16 @@ pipeline {
             }
         }
 
+        stage('Update deployment') {
+            steps {
+                dir('kubernetes') {
+                    withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
+                            sh "kubectl set image deployments/devops-capstone devops-capstone=maximilianschwab/devops_capstone:${BUILD_NUMBER}"
+                        }
+                    }
+            }
+        }
+
     }
 }
 
