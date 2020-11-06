@@ -24,7 +24,7 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build Dockerfile') {
             steps {
                 script {
                     image = docker.build("maximilianschwab/devops_capstone", "-f app/Dockerfile app")
@@ -32,7 +32,7 @@ pipeline {
             }
         }
 
-        stage('Push') {
+        stage('Push Dockerfile') {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
