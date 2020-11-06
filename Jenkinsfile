@@ -47,7 +47,7 @@ pipeline {
             steps {
                 dir('kubernetes') {
                     withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
-                            sh 'kubectl config view'
+                            sh 'kubectl config view --kubeconfig=/home/ubuntu/.kube/config'
                         }
                     }
             }
