@@ -47,7 +47,7 @@ pipeline {
             steps {
                 dir('kubernetes') {
                     withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
-                            sh 'kubectl config view --kubeconfig=/home/ubuntu/.kube/config'
+                            sh 'sudo kubectl config view --kubeconfig=/home/ubuntu/.kube/config'
                         }
                     }
             }
@@ -57,7 +57,7 @@ pipeline {
             steps {
                 dir('kubernetes') {
                     withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
-                            sh 'kubectl config current-context'
+                            sh 'sudo kubectl config current-context --kubeconfig=/home/ubuntu/.kube/config'
                         }
                     }
             }
@@ -67,7 +67,7 @@ pipeline {
             steps {
                 dir('kubernetes') {
                     withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
-                            sh 'kubectl apply -v=8 -f deployment.yaml'
+                            sh 'sudo kubectl apply -v=8 -f deployment.yaml --kubeconfig=/home/ubuntu/.kube/config'
                         }
                     }
             }
