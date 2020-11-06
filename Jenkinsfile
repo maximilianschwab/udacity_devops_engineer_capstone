@@ -47,7 +47,7 @@ pipeline {
             steps {
                 dir('kubernetes') {
                     withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
-                            sh 'sudo kubectl config view --kubeconfig=/home/ubuntu/.kube/config'
+                            sh 'kubectl config view --kubeconfig=/home/ubuntu/.kube/config'
                         }
                     }
             }
@@ -57,7 +57,7 @@ pipeline {
             steps {
                 dir('kubernetes') {
                     withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
-                            sh 'sudo kubectl config current-context --kubeconfig=/home/ubuntu/.kube/config'
+                            sh 'kubectl config current-context --kubeconfig=/home/ubuntu/.kube/config'
                         }
                     }
             }
@@ -67,7 +67,7 @@ pipeline {
             steps {
                 dir('kubernetes') {
                     withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
-                            sh 'sudo aws configure list'
+                            sh 'aws configure list'
                         }
                     }
             }
@@ -77,7 +77,7 @@ pipeline {
             steps {
                 dir('kubernetes') {
                     withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
-                            sh 'sudo kubectl apply -v=8 -f deployment.yaml --kubeconfig=/home/ubuntu/.kube/config'
+                            sh 'kubectl apply -v=8 -f deployment.yaml --kubeconfig=/home/ubuntu/.kube/config'
                         }
                     }
             }
@@ -85,3 +85,6 @@ pipeline {
 
     }
 }
+
+aws_access_key_id = AKIAYMWPM4K3L6ZCD6F6
+aws_secret_access_key = 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
