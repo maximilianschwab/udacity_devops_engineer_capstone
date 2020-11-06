@@ -43,6 +43,16 @@ pipeline {
             }
         }
 
+        stage('Print current kubectl context') {
+            steps {
+                dir('kubernetes') {
+                    withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
+                            sh 'kubectl config current-context'
+                        }
+                    }
+            }
+        }
+
         stage('Apply deployment') {
             steps {
                 dir('kubernetes') {
