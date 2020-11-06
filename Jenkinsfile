@@ -43,6 +43,16 @@ pipeline {
             }
         }
 
+        stage('kubectl config view') {
+            steps {
+                dir('kubernetes') {
+                    withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
+                            sh 'kubectl config view'
+                        }
+                    }
+            }
+        }
+
         stage('Print current kubectl context') {
             steps {
                 dir('kubernetes') {
