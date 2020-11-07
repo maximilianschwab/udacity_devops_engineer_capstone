@@ -19,6 +19,10 @@ The Jenkins CI/CD pipeline executes the following stages:
 
 The infrastructure like network, EKS and so on are built via CloudFormation. The scripts for the differnet CloudFormation stacks can be found in the different folders of the aws folder.
 
+The Docker image can be found on Docker Hun under the following URL https://hub.docker.com/r/maximilianschwab/devops_capstone
+
+Or simply run `docker pull maximilianschwab/devops_capstone` to run the micro service locally in Docker.
+
 
 
 ## Steps in completing the project
