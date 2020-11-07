@@ -114,6 +114,7 @@ pipeline {
                 withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
                     sh '''
                         HOST=$(kubectl get service service-devops-capstone --kubeconfig=/home/ubuntu/.kube/config | grep 'amazonaws.com' | awk '{print $4}')
+                        HOST="$HOST:8080"
                         curl $HOST -f
                     '''
                 }
