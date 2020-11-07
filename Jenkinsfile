@@ -93,5 +93,21 @@ pipeline {
             }
         }
 
+        stage('Wait for pods') {
+            steps {
+                withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
+                    sh '''
+                        ATTEMPTS=0
+                        ROLLOUT_STATUS_CMD="kubectl rollout status deployment/devops-capstone"
+                        until $ROLLOUT_STATUS_CMD || [ $ATTEMPTS -eq 60 ]; do
+                            $ROLLOUT_STATUS_CMD
+                            ATTEMPTS=$((attempts + 1))
+                            sleep 10
+                        done
+                    '''
+                }
+            }
+        }
+
     }
 }
