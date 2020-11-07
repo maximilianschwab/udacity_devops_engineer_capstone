@@ -109,5 +109,16 @@ pipeline {
             }
         }
 
+        stage('Post deployment test') {
+            steps {
+                withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
+                    sh '''
+                        HOST=$(kubectl get service service-devops-capstone | grep 'amazonaws.com' | awk '{print $4}')
+                        curl $HOST -f
+                    '''
+                }
+            }
+        }
+
     }
 }
