@@ -9,4 +9,4 @@ curl -d '{
     "number2":2
 }'\
      -H "Content-Type: application/json" \
-     -X POST http://localhost:$PORT/helloworld
+     -X POST http://localhost:$PORT/sum_up

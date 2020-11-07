@@ -11,7 +11,7 @@ def home():
     html = "<h3>Capstone project</h3>"
     return html.format(format)
 
-@app.route("/helloworld", methods=['POST'])
+@app.route("/sum_up", methods=['POST'])
 def greet():
     # Logging the input payload
     json_payload = request.json
