@@ -16,7 +16,7 @@ The result is provided in the following form:
 ## Run this commands on your linux machine
 * Install python 3.7 with the following command: `sudo apt install python3.7` 
 * Execute `make setup`
-* Execute `source ~/venv/.devops/bin/activate`
+* Execute `source ~/.devops/bin/activate`
 * Execute `make install`
 * Execute `python app.py`
 * Execute `./sum_up_example.sh` to get the sum
