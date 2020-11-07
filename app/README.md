@@ -19,7 +19,7 @@ The result is provided in the following form:
 * Execute `source ~/venv/.devops/bin/activate`
 * Execute `make install`
 * Execute `python app.py`
-* Execute `./sum_up_example.sh` to get a prediction result
+* Execute `./sum_up_example.sh` to get the sum
 
 ## Execute test
 * To run the tests execute `make test`
