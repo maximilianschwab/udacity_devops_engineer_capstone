@@ -27,6 +27,18 @@ Parameters:
     Default: 10.0.3.0/24
     Description: CidrBlock for subnet 3 within the VPC (only used if the region has more than 2 AZs)
 
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: "Worker Network Configuration"
+        Parameters:
+          - VpcBlock
+          - Subnet1Block
+          - Subnet2Block
+          - Subnet3Block
+
 Conditions:
   Has2Azs:
     Fn::Or:
