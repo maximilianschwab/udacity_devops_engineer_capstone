@@ -98,7 +98,7 @@ pipeline {
                 withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
                     sh '''
                         ATTEMPTS=0
-                        ROLLOUT_STATUS_CMD="kubectl rollout status deployment/devops-capstone"
+                        ROLLOUT_STATUS_CMD="kubectl rollout status deployment/devops-capstone --kubeconfig=/home/ubuntu/.kube/config"
                         until $ROLLOUT_STATUS_CMD || [ $ATTEMPTS -eq 60 ]; do
                             $ROLLOUT_STATUS_CMD
                             ATTEMPTS=$((attempts + 1))
@@ -113,7 +113,7 @@ pipeline {
             steps {
                 withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
                     sh '''
-                        HOST=$(kubectl get service service-devops-capstone | grep 'amazonaws.com' | awk '{print $4}')
+                        HOST=$(kubectl get service service-devops-capstone --kubeconfig=/home/ubuntu/.kube/config | grep 'amazonaws.com' | awk '{print $4}')
                         curl $HOST -f
                     '''
                 }
