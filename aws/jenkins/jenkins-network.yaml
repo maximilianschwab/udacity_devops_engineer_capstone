@@ -5,6 +5,10 @@ Parameters:
     Description: ProjectName name, used as a prefix for resources
     Type: String
 
+  WhiteListIP:
+    Description: Whitelisted IP for SSH connection
+    Type: String
+
   VpcCIDR:
     Description: CIRD IP range for the VPC (default - 10.0.0.0/16)
     Type: String
